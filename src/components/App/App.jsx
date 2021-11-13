@@ -1,16 +1,30 @@
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 import { TextField } from '@material-ui/core';
 import {BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
+import PizzaList from '../PizzaList/PizzaList';
 
 function App() {
 
-  // const reducerName = useSelector(store => store.reducerName);
-  
-  const pizza = useSelector(store => store.pizza);
   const dispatch = useDispatch();
+
+  useEffect( ()=>{
+    getPizzaOptions();
+  }, []);
+
+  const getPizzaOptions=()=>{
+    axios.get( '/api/pizza' ).then(
+        response =>{
+          dispatch({type:'GET_PIZZAS', payload: response.data })
+        }).catch(
+          (err)=>{
+           alert('nope');
+            console.log(err);
+        })
+  };
+ 
   
   const getName = (event) => {
     console.log(event.target.value);
@@ -23,9 +37,7 @@ function App() {
       </header>
       <img src='images/pizza_photo.png' />
       <br></br>
-      <button onClick={()=>dispatch( { type: 'GET_PIZZA' } ) }>Get Pizza Message</button>
-      <h1>{pizza}</h1>
-  
+      <PizzaList />
     </div>
   );
 }

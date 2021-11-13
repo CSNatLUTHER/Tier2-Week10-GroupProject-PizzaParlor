@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App/App';
@@ -7,13 +7,14 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import logger from 'redux-logger';
 
+
 //reducers
-const pizza = (state = "Pizza is Great ", action) => {
-    console.log('hello world from a pizza reducer! Action:', action);
-    if(action.type === 'GET_PIZZA'){
-        state = "Pizza is REALLY great!!!"
-    }
-    return state
+const getPizzas = (state = [], action) => {
+      if(action.type === 'GET_PIZZAS'){
+       state = action.payload
+       return state;
+      }  
+      return state  
   }
 
 
@@ -21,7 +22,7 @@ const pizza = (state = "Pizza is Great ", action) => {
 const storeInstance = createStore(
     combineReducers(
       {
-        pizza
+        getPizzas
       }
     ),
     applyMiddleware(
@@ -34,7 +35,6 @@ ReactDOM.render(
       <Provider store={storeInstance}>
         <App />
       </Provider>
-  
     </React.StrictMode>,
     document.getElementById('root')
 );
